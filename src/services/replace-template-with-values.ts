@@ -2,6 +2,7 @@ import { format, parse, parseISO } from 'date-fns'
 
 import { CollectionItem, CreatorItem, NoteItem, ZotData } from '../interfaces'
 import { getCollectionNames } from './get-collection-names'
+import { getPropertyReference } from '.get-property-reference'
 
 export const replaceTemplateWithValues = async (
   template: string,
@@ -29,7 +30,7 @@ export const replaceTemplateWithValues = async (
       // Remove the entire line if the value is empty
       result = result.replace(new RegExp(`^.*<% ${key} %>.*$\n?`, 'gm'), '')
     } else if (key === 'itemType') {
-      result = result.replace(placeholder, `[[${value}]]`)
+      result = result.replace(placeholder, getPropertyReference(key, value))
     } else if (
       key === 'accessDate' ||
       key === 'date' ||
@@ -39,14 +40,16 @@ export const replaceTemplateWithValues = async (
       try {
         result = result.replace(
           placeholder,
-          `[[${format(
-            parseISO(value) || parse(value, 'yyyy-MM-dd', new Date()),
-            preferredDateFormat,
-          )}]]`,
+          getPropertyReference(key,
+            format(
+              parseISO(value) || parse(value, 'yyyy-MM-dd', new Date()),
+              preferredDateFormat,
+            )
+          ),
         )
       } catch (e) {
         console.log(`logseq-zoterolocal-plugin`, e, `Unable to parse ${value}`)
-        result = result.replace(placeholder, value)
+        result = result.replace(placeholder, getPropertyReference(key, value))
       }
     } else if (key === 'attachments') {
       const attachmentArr = []
@@ -75,7 +78,7 @@ export const replaceTemplateWithValues = async (
           logseq.settings!.authorTemplate as string,
           creator,
         )
-        creatorArr.push(str)
+        creatorArr.push(getPropertyReference(key, str))
       }
       result = result.replace(placeholder, creatorArr.join(', '))
     } else if (key === 'notes') {
@@ -88,8 +91,7 @@ export const replaceTemplateWithValues = async (
     } else if (key === 'tags') {
       const tagsArr = []
       for (const tag of value) {
-        const str = `[[${tag.tag}]]`
-        tagsArr.push(str)
+        tagsArr.push(getPropertyReference(key, tag.tag as string))
       }
       result = result.replace(placeholder, tagsArr.join(', '))
     } else if (key === 'collections' && collections) {
@@ -100,7 +102,7 @@ export const replaceTemplateWithValues = async (
       // Handle array and objects that are not attachments, notes, creators
       continue
     } else {
-      result = result.replace(placeholder, value)
+      result = result.replace(placeholder, getPropertyReference(key, value))
     }
   }
 

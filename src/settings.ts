@@ -49,6 +49,20 @@ export const handleSettings = async ({
         description: `Specify the template when using the command /Zotero: Insert citation. Ensure that <% citeKey %> placeholder is indicated in your template`,
         default: '[@<% citeKey %>]',
       },
+      {
+        key: 'pageReferences',
+        type: 'string',
+        title: 'Properties that should be linked as page references',
+        description: `A list of space separated properties, that should be linked as page references (e.g. accessDate itemType).`,
+        default: 'itemType accessDate date dateAdded dateModified tags collections',
+      },
+      {
+        key: 'tagReferences',
+        type: 'string',
+        title: 'Properties that should be linked as tags',
+        description: `A list of space separated properties, that should be linked as tags (e.g. accessDate itemType).`,
+        default: '',
+      },
     ]
 
     settings = [...settings, ...pluginSettings]
