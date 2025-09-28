@@ -11,6 +11,12 @@ export const getPropertyReference = (
   }
 
   if (tagRefs.split(" ").includes(propertyName)) {
+
+    // TODO consider including a tag naming rule to have multiple options
+    if (value.indexOf(" ") > -1) {
+      return `#[[${value}]]`
+    }
+
     return `#${value}`
   }
 

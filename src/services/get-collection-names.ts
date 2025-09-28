@@ -1,5 +1,5 @@
 import { CollectionItem } from '../interfaces'
-import { getPropertyReference } from '.get-property-reference'
+import { getPropertyReference } from './get-property-reference'
 
 export const getCollectionNames = (
   keys: string[],

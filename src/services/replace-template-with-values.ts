@@ -2,7 +2,7 @@ import { format, parse, parseISO } from 'date-fns'
 
 import { CollectionItem, CreatorItem, NoteItem, ZotData } from '../interfaces'
 import { getCollectionNames } from './get-collection-names'
-import { getPropertyReference } from '.get-property-reference'
+import { getPropertyReference } from './get-property-reference'
 
 export const replaceTemplateWithValues = async (
   template: string,
